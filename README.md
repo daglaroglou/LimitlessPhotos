@@ -32,7 +32,7 @@
 
 ## Uninstallation
 
-1. In Magisk Manager (or your installer), disable or uninstall **LimitlessPhotos**.  
+1. In Magisk Manager/KernelSU Manager, disable or uninstall **LimitlessPhotos**.  
 2. Reboot—your system will revert to stock backup limits.
 
 ## Contributing
@@ -40,8 +40,3 @@
 1. Fork the repo & create a new branch.  
 2. Implement your fix or feature.  
 3. Submit a pull request—ensure all shell scripts remain POSIX-compliant.
-
-## License
-
-MIT License © [DaG](https://github.com/daglaroglou)  
-See [LICENSE](LICENSE) for details.
