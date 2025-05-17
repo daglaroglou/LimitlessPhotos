@@ -8,8 +8,8 @@
 
 - Enables unlimited, original-quality photo & video backup on non-Pixel devices  
 - Works on Android 11+ (SDK 30+)
-- Lightweight: injects only necessary system config patches  
-- Safe: leaves stock configs untouched when disabled  
+- Lightweight: injects only necessary system config patches in Google Photos app
+- Safe: leaves stock configs untouched
 
 ## Prerequisites
 
