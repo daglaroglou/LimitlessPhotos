@@ -18,7 +18,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'LimitlessPhotos.zip'
-          exclusions: '*.git* /*node_modules/* .editorconfig'
+          exclusions: '*.github* *.git* /*node_modules/* .editorconfig README.md'
           
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
