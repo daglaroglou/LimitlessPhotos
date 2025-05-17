@@ -21,7 +21,7 @@ jobs:
         with:
           type: zip
           filename: LimitlessPhotos.zip
-          exclusions: '*.git* *.github* /*node_modules/* .editorconfig'
+          exclusions: 'README.md *.git* *.github* /*node_modules/* .editorconfig'
 
       - name: Create GitHub Release and Upload Asset
         uses: softprops/action-gh-release@v1
