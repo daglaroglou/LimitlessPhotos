@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/system/bin/sh
 
 # Credits for the method to @cuynu
 # Dev: @daglaroglou
