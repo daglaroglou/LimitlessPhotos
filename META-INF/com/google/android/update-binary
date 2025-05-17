@@ -1,0 +1,85 @@
+#!/sbin/sh
+
+#################
+# Initialization
+#################
+
+umask 022
+
+# echo before loading util_functions
+ui_print() { echo "$1"; }
+
+require_new_magisk() {
+  ui_print "*******************************"
+  ui_print " Please install Magisk v20.4+! "
+  ui_print "*******************************"
+  exit 1
+}
+
+#########################
+# Load util_functions.sh
+#########################
+
+OUTFD=$2
+ZIPFILE=$3
+
+mount /data 2>/dev/null
+
+[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
+. /data/adb/magisk/util_functions.sh
+[ $MAGISK_VER_CODE -lt 20400 ] && require_new_magisk
+
+# Display welcome message and info
+ui_print ""
+ui_print "********************************"
+ui_print "  Limitless Photos Zygisk Module  "
+ui_print "********************************"
+ui_print ""
+ui_print "• Enables Unlimited Google Photos on non-Pixel devices"
+ui_print "• Compatible with Android 11-13"
+ui_print "• Version: 1.0.0"
+ui_print ""
+
+# Detect installation environment (KernelSU or Magisk)
+ui_print "» Detecting installation environment..."
+if [ -d "/data/adb/ksu" ] || [ -f "/data/adb/ksud" ]; then
+  ui_print "✓ KernelSU detected"
+  ENV_TYPE="KernelSU"
+else
+  ui_print "✓ Magisk detected"
+  ENV_TYPE="Magisk"
+fi
+ui_print ""
+
+# Check device compatibility
+ui_print "» Checking device compatibility..."
+sleep 0.5
+# Android version check
+if [ "$(getprop ro.build.version.sdk)" -lt "30" ]; then
+  ui_print "! Warning: This module works best on Android 11+ (SDK 30+)"
+  ui_print "  Your device is running $(getprop ro.build.version.release)"
+  ui_print "  Some features may not work properly"
+  sleep 1
+else
+  ui_print "✓ Android version: $(getprop ro.build.version.release)"
+fi
+
+# Installation progress
+ui_print ""
+ui_print "» Installing module to $ENV_TYPE..."
+sleep 0.5
+install_module
+ui_print "✓ Module installed successfully!"
+
+# Final instructions
+ui_print ""
+ui_print "» Finalizing installation..."
+sleep 0.5
+ui_print "✓ All done!"
+ui_print ""
+ui_print "Please reboot your device to activate the module"
+ui_print "After reboot, check Google Photos for new features"
+ui_print ""
+ui_print "********************************"
+
+exit 0
