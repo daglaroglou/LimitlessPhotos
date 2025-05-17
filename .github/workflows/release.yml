@@ -5,7 +5,7 @@ on:
     types: [created]
 
 permissions:
-  contents: write
+  contents: write  # This grants write permission to the workflow
 
 jobs:
   build:
@@ -18,10 +18,14 @@ jobs:
         with:
           type: 'zip'
           filename: 'LimitlessPhotos.zip'
-          exclusions: '*.git* /*node_modules/* .editorconfig'
+          exclusions: '*.git* *.github* /*node_modules/* .editorconfig'
           
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v1
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ./LimitlessPhotos.zip
-          name: LimitlessPhotos-zygisk.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./LimitlessPhotos.zip
+          asset_name: LimitlessPhotos-zygisk.zip
+          asset_content_type: application/zip
