@@ -1,28 +1,31 @@
 name: Create Release Archive
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
-  contents: write  # Needed to upload assets
+  contents: write
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Archive Release
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Zip the project
         uses: thedoctor0/zip-release@master
         with:
-          type: 'zip'
-          filename: 'LimitlessPhotos-zygisk.zip'
+          type: zip
+          filename: LimitlessPhotos.zip
           exclusions: '*.git* *.github* /*node_modules/* .editorconfig'
 
-      - name: Upload Release Asset
+      - name: Create GitHub Release and Upload Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: LimitlessPhotos-zygisk.zip
+          files: LimitlessPhotos.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
