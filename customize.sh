@@ -3,12 +3,6 @@
 # https://gitlab.com/cuynu/gphotos-unlimited-zygisk
 # Modified by: @daglaroglou
 
-ui_print "» Detecting installation environment..."
-if [ -d "/data/adb/ksu" ] || [ -f "/data/adb/ksud" ]; then
-  ui_print "✓ KernelSU detected"
-else
-  ui_print "✓ Magisk detected"
-fi
 ui_print ""
 ui_print "» Checking device compatibility..."
 sleep 0.5
@@ -22,6 +16,7 @@ else
 fi
 ui_print ""
 ui_print "» Patching Google Photos..."
+sleep 1
 
 PIXEL_PATTERNS="PIXEL_2017_PRELOAD\|PIXEL_2018_PRELOAD\|PIXEL_2019_PRELOAD\|PIXEL_2020_\|PIXEL_2021_\|PIXEL_2022_"
 
@@ -59,8 +54,6 @@ if [ -d "$OLD_MODULE" ]; then
 fi
 
 ui_print ""
-ui_print "» Installing module to $ENV_TYPE..."
-sleep 0.5
 ui_print "✓ Module installed successfully!"
 ui_print ""
 ui_print "********************************"
