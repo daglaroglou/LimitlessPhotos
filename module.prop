@@ -1,6 +1,7 @@
 id=LimitlessPhotos
 name=Unlimited Google Photos Backup
-version=v1.0.0
-versionCode=001
+version=v1.1.0
+versionCode=110
 author=DaG
-description=Adds Pixel XL device features in GPhotos, unlimited plan.
+description=Adds Unlimited plan in Google Photos.
+updateJson=https://raw.githubusercontent.com/daglaroglou/LimitlessPhotos/main/update.json
