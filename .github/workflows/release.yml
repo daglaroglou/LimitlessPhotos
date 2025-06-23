@@ -13,12 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Read changelog
+        id: changelog
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./CHANGELOG.md
+      
+      - name: Update Release Description
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.changelog.outputs.content }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
           filename: 'LimitlessPhotos.zip'
-          exclusions: '*.github* *.git* /*node_modules/* .editorconfig README.md'
+          exclusions: '*.github* *.git* /*node_modules/* .editorconfig README.md CHANGELOG.md'
           
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
