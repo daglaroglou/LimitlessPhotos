@@ -1,4 +1,4 @@
-# /bin/bash
+#!/bin/sh
 # Initial method: @cuynu
 # https://gitlab.com/cuynu/gphotos-unlimited-zygisk
 # Modified by: @daglaroglou
