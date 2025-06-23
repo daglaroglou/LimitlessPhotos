@@ -19,7 +19,7 @@
 
 ## Installation
 
-1. Download the latest [`LimitlessPhotos-zygisk.zip`](https://github.com/daglaroglou/LimitlessPhotos/releases) from Releases.  
+1. Download the latest [`LimitlessPhotos.zip`](https://github.com/daglaroglou/LimitlessPhotos/releases) from Releases.  
 2. Open Magisk Manager (or your preferred installer) and install the module ZIP.  
 3. Reboot your device.
 
