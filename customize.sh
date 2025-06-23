@@ -5,18 +5,18 @@
 
 ui_print ""
 ui_print "» Checking device compatibility..."
-# sleep 0.5
+sleep 0.5
 if [ "$(getprop ro.build.version.sdk)" -lt "30" ]; then
   ui_print "! Warning: This module works best on Android 11+ (SDK 30+)"
   ui_print "  Your device is running $(getprop ro.build.version.release)"
   ui_print "  Some features may not work properly"
-#   sleep 1
+  sleep 1
 else
   ui_print "✓ Android version: $(getprop ro.build.version.release)"
 fi
 ui_print ""
 ui_print "» Patching Google Photos..."
-# sleep 1
+sleep 1
 
 PIXEL_PATTERNS="PIXEL_2017_PRELOAD\|PIXEL_2018_PRELOAD\|PIXEL_2019_PRELOAD\|PIXEL_2020_\|PIXEL_2021_\|PIXEL_2022_"
 
