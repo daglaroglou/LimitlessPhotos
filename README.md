@@ -35,6 +35,10 @@
 1. In Magisk Manager/KernelSU Manager, disable or uninstall **LimitlessPhotos**.  
 2. Reboot—your system will revert to stock backup limits.
 
+## Known Bugs
+
+1. Currently doesnt work with **SukiSU** root method.
+
 ## Contributing
 
 1. Fork the repo & create a new branch.  
