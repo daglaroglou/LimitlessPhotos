@@ -3,9 +3,7 @@
 # https://gitlab.com/cuynu/gphotos-unlimited-zygisk
 # Modified by: @daglaroglou
 OLD_MODULE="/data/adb/modules/LimitlessPhotos"
-process_sysconfig "/system/product/etc/sysconfig" "system/product/etc/sysconfig"
-process_sysconfig "/system/etc/sysconfig" "system/etc/sysconfig"
-
+PIXEL_PATTERNS="PIXEL_2017_PRELOAD\\|PIXEL_2018_PRELOAD\\|PIXEL_2019_PRELOAD\\|PIXEL_2020_\\|PIXEL_2021_\\|PIXEL_2022_"
 ui_print ""
 ui_print "» Checking device compatibility..."
 sleep 0.5
@@ -21,8 +19,6 @@ ui_print ""
 ui_print "» Patching Google Photos..."
 sleep 1
 
-PIXEL_PATTERNS="PIXEL_2017_PRELOAD\\|PIXEL_2018_PRELOAD\\|PIXEL_2019_PRELOAD\\|PIXEL_2020_\\|PIXEL_2021_\\|PIXEL_2022_"
-
 process_sysconfig() {
     local src_dir="$1"
     local dest_dir="$2"
@@ -37,7 +33,8 @@ process_sysconfig() {
         fi
     done
 }
-
+process_sysconfig "/system/product/etc/sysconfig" "system/product/etc/sysconfig"
+process_sysconfig "/system/etc/sysconfig" "system/etc/sysconfig"
 if [ -d "$OLD_MODULE" ]; then
     for dir in "system/product/etc/sysconfig" "system/etc/sysconfig"; do
         if [ -d "$OLD_MODULE/$dir" ]; then
