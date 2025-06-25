@@ -12,6 +12,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Configure Git line endings
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          git checkout-index --force --all
       
       - name: Read changelog
         id: changelog
