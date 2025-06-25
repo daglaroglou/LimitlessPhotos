@@ -10,33 +10,58 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
+      # Checkout code
       - uses: actions/checkout@v4
+
+      # Configure Git to use LF endings
       - name: Configure Git line endings
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
           git checkout-index --force --all
-      
+
+      # Optional: Verify all files have LF endings
+      - name: Verify LF line endings
+        run: |
+          $badFiles = @()
+          Get-ChildItem -Recurse -File | ForEach-Object {
+            $content = Get-Content $_.FullName -Raw
+            if ($content -match "`r`n") {
+              $badFiles += $_.FullName
+            }
+          }
+          if ($badFiles.Count -gt 0) {
+            Write-Host "CRLF line endings found in:"
+            $badFiles | ForEach-Object { Write-Host $_ }
+            exit 1
+          }
+        shell: pwsh
+
+      # Read changelog for release notes
       - name: Read changelog
         id: changelog
         uses: juliangruber/read-file-action@v1
         with:
           path: ./CHANGELOG.md
 
+      # Update GitHub Release description
       - name: Update Release Description
         uses: softprops/action-gh-release@v1
         with:
           body: ${{ steps.changelog.outputs.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
+      # Create zip archive (won't modify line endings)
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
           filename: 'LimitlessPhotos.zip'
           exclusions: '*.github* *.git* /*node_modules/* .editorconfig README.md CHANGELOG.md'
-          
+
+      # Upload zip to GitHub release
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
