@@ -14,7 +14,7 @@
 ## Prerequisites
 
 - Android device running **Android 11+**  
-- **Magisk v20.4+** or **KernelSU** with Zygisk support  
+- **Magisk v20.4+** or **KernelSU/KernelSU Next** with Zygisk support  
 - Basic familiarity with Magisk modules
 
 ## Installation
