@@ -2,6 +2,9 @@
 # Initial method: @cuynu
 # https://gitlab.com/cuynu/gphotos-unlimited-zygisk
 # Modified by: @daglaroglou
+OLD_MODULE="/data/adb/modules/LimitlessPhotos"
+process_sysconfig "/system/product/etc/sysconfig" "system/product/etc/sysconfig"
+process_sysconfig "/system/etc/sysconfig" "system/etc/sysconfig"
 
 ui_print ""
 ui_print "» Checking device compatibility..."
@@ -23,9 +26,8 @@ PIXEL_PATTERNS="PIXEL_2017_PRELOAD\\|PIXEL_2018_PRELOAD\\|PIXEL_2019_PRELOAD\\|P
 process_sysconfig() {
     local src_dir="$1"
     local dest_dir="$2"
-    
     mkdir -p "$MODPATH/$dest_dir"
-    
+
     for file in "$src_dir"/*; do
         [ -f "$file" ] || continue
         local filename=$(basename "$file")
@@ -36,10 +38,6 @@ process_sysconfig() {
     done
 }
 
-process_sysconfig "/system/product/etc/sysconfig" "system/product/etc/sysconfig"
-process_sysconfig "/system/etc/sysconfig" "system/etc/sysconfig"
-
-OLD_MODULE="/data/adb/modules/LimitlessPhotos"
 if [ -d "$OLD_MODULE" ]; then
     for dir in "system/product/etc/sysconfig" "system/etc/sysconfig"; do
         if [ -d "$OLD_MODULE/$dir" ]; then
