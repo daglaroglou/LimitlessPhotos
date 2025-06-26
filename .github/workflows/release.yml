@@ -39,10 +39,10 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Create zip archive using native zip
+      # Create zip archive using native zip with no compression (store only)
       - name: Archive Release
         run: |
-          zip -r LimitlessPhotos.zip . \
+          zip -0 -r LimitlessPhotos.zip . \
             -x '*.git*' '*.github*' '*node_modules*' '*.editorconfig' 'README.md' 'CHANGELOG.md'
 
       # Upload zip file to release
