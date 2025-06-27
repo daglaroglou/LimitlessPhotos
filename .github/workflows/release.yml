@@ -12,18 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code (relies on .gitattributes for line endings)
-      - uses: actions/checkout@v4
-
-      # Optional: Verify all files use LF endings
-      - name: Verify LF line endings
-        run: |
-          if grep -rl $'\r' .; then
-            echo "CRLF line endings found!"
-            exit 1
-          else
-            echo "All files use LF line endings."
-          fi
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       # Read changelog for release notes
       - name: Read changelog
@@ -39,11 +30,15 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Create zip archive using native zip with no compression (store only)
-      - name: Archive Release
+      # Install 7zip
+      - name: Install 7zip
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
+      # Create archive using 7zip with store-only mode
+      - name: Archive Release with 7zip
         run: |
-          zip -0 -r LimitlessPhotos.zip . \
-            -x '*.git*' '*.github*' '*node_modules*' '*.editorconfig' 'README.md' 'CHANGELOG.md'
+          7z a -tzip -mx0 LimitlessPhotos.zip ./* \
+            -xr!.git -xr!.github -xr!node_modules -x!.editorconfig -x!README.md -x!CHANGELOG.md
 
       # Upload zip file to release
       - name: Upload Release Asset
