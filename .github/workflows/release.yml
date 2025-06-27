@@ -1,9 +1,8 @@
-name: Create Release
+name: Create Release Assets
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -14,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0
           
-      - name: Get version from tag
+      - name: Get version from release
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         
@@ -30,32 +29,29 @@ jobs:
         run: |
           git config --global core.autocrlf input
           git config --global core.eol lf
-          
+    
           # Create a temp directory for the archive
           mkdir -p temp_archive
-          
-          # Copy files to temp directory with LF endings
-          git ls-files | while read file; do
+    
+          # Copy files to temp directory with LF endings, excluding specified files
+          git ls-files | grep -v "README.md\|CHANGELOG.md\|.gitattributes\|.github/" | while read file; do
             if [ -f "$file" ]; then
               mkdir -p "temp_archive/$(dirname "$file")"
               cat "$file" | tr -d '\r' > "temp_archive/$file"
             fi
           done
-          
+    
           # Create the ZIP archive
           cd temp_archive
           zip -r ../LimitlessPhotos.zip .
           cd ..
           
-      - name: Create Release
-        id: create_release
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
           body: ${{ steps.changelog.outputs.CHANGELOG }}
-          draft: false
-          prerelease: false
           files: LimitlessPhotos.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
