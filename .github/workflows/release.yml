@@ -1,52 +1,61 @@
-name: Create Release Archive
+name: Create Release
 
 on:
-  release:
-    types: [created]
-
-permissions:
-  contents: write
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
-
-      # Read changelog for release notes
-      - name: Read changelog
-        id: changelog
-        uses: juliangruber/read-file-action@v1
         with:
-          path: ./CHANGELOG.md
-
-      # Update GitHub Release description
-      - name: Update Release Description
+          fetch-depth: 0
+          
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+      - name: Read CHANGELOG.md
+        id: changelog
+        run: |
+          CHANGELOG=$(cat CHANGELOG.md)
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+      - name: Create ZIP with LF line endings
+        run: |
+          git config --global core.autocrlf input
+          git config --global core.eol lf
+          
+          # Create a temp directory for the archive
+          mkdir -p temp_archive
+          
+          # Copy files to temp directory with LF endings
+          git ls-files | while read file; do
+            if [ -f "$file" ]; then
+              mkdir -p "temp_archive/$(dirname "$file")"
+              cat "$file" | tr -d '\r' > "temp_archive/$file"
+            fi
+          done
+          
+          # Create the ZIP archive
+          cd temp_archive
+          zip -r ../LimitlessPhotos.zip .
+          cd ..
+          
+      - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          body: ${{ steps.changelog.outputs.content }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Install 7zip
-      - name: Install 7zip
-        run: sudo apt-get update && sudo apt-get install -y p7zip-full
-
-      # Create archive using 7zip with store-only mode
-      - name: Archive Release with 7zip
-        run: |
-          7z a -tzip -mx0 LimitlessPhotos.zip ./* \
-            -xr!.git -xr!.github -xr!node_modules -x!.editorconfig -x!README.md -x!CHANGELOG.md
-
-      # Upload zip file to release
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          tag_name: ${{ github.ref }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.changelog.outputs.CHANGELOG }}
+          draft: false
+          prerelease: false
+          files: LimitlessPhotos.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./LimitlessPhotos.zip
-          asset_name: LimitlessPhotos.zip
-          asset_content_type: application/zip
